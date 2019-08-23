@@ -1,5 +1,5 @@
 <template>
-  <div>Cloud Music</div>
+  <div class="header">Cloud Music</div>
 </template>
 
 <script>
@@ -8,4 +8,13 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+  @import '~stylus/variable.styl'
+  .header
+    height 40px
+    line-height 40px
+    background-color $themeColor
+    color #fff
+    font-size 16px
+    text-align center
+</style>
