@@ -1,0 +1,19 @@
+cloud-music开发流程及问题记录
+
+一、项目初始化
+1. vue-cli2.0构建的项目，每次打开端口都不一样，解决办法是使用以下命令安装旧的portfinder：
+    npm install portfinder@1.0.21；
+2. 项目初始化流程：
+    设计目录结构  基础文件配置
+    安装插件：npm install babel-runtime
+             npm install babel-polyfill
+             npm install fastclick
+             npm install stylus  npm install stylus-loader
+    main.js
+    引入样式文件 引入路由router、babel-polyfill、fastclick
+3. 开发Header组件 tab组件 配置页面路由
+    router配置： 根目录重定向、linkActiveClass
+
+二、Recommend组件开发
+1. 轮播组件
+2. 热门歌单组件
