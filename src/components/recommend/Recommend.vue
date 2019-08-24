@@ -1,11 +1,17 @@
 <template>
-  <div>Recommend</div>
+  <div>
+    <slider></slider>
+  </div>
 </template>
 
 <script>
+import Slider from 'base/slider/Slider'
 import { getSliderList } from 'api/recommend'
 export default {
   name: 'Recommend',
+  components: {
+    Slider
+  },
   data () {
     return {
       slider: []
