@@ -1,5 +1,5 @@
 <template>
-  <div>banner-slider</div>
+  <div>banner-slider123</div>
 </template>
 
 <script>
