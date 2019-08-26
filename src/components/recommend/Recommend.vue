@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <slider></slider>
+  <div class="recommend">
+    <div v-if="slider.length" class="slider-wrapper">
+      <slider>
+        <div v-for="(item, index) of slider" :key="index">
+          <img :src="item.picUrl" />
+        </div>
+      </slider>
+    </div>
   </div>
 </template>
 
@@ -20,7 +26,8 @@ export default {
   methods: {
     _getSliderList () {
       getSliderList().then((res) => {
-        console.log(res)
+        // console.log(res)
+        this.slider = res.data.data
       })
     }
   },
