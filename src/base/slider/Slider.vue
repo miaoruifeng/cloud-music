@@ -112,6 +112,17 @@ export default {
       this.setSliderWidth(true)
       this.slider.refresh()
     })
+  },
+  beforeDestroy () {
+    clearTimeout(this.timer)
+  },
+  activated () {
+    if (this.autoPlay) {
+      this._autoPlay()
+    }
+  },
+  deactivated () {
+    clearTimeout(this.timer)
   }
 }
 </script>
