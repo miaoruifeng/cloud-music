@@ -3,7 +3,7 @@
     <h1 class="list-title">热门歌单推荐</h1>
     <ul>
       <li class="item border-bottom" v-for="item of list" :key="item.id">
-        <img class="item-img" :src="item.coverImgUrl" />
+        <img class="item-img" v-lazy="item.coverImgUrl" />
         <div class="item-text">
           <h2 class="item-name">{{item.name}}</h2>
           <p class="item-disc">{{item.description}}</p>
