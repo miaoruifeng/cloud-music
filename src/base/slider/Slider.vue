@@ -109,7 +109,7 @@ export default {
       if (!this.slider) {
         return
       }
-      this.setSliderWidth(true)
+      this._setSliderWidth(true)
       this.slider.refresh()
     })
   },
