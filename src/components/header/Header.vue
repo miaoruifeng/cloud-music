@@ -11,8 +11,8 @@ export default {
 <style lang="stylus" scoped>
   @import '~stylus/variable.styl'
   .header
-    height 40px
-    line-height 40px
+    height 44px
+    line-height 44px
     background-color $themeColor
     color #fff
     font-size 16px

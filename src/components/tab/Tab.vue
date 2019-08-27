@@ -1,5 +1,5 @@
 <template>
-  <div class="tab border-bottom">
+  <div class="tab">
     <router-link tag="div" class="tab-item" to="/recommend">
       <span class="tab-link">推荐</span>
     </router-link>
@@ -27,14 +27,13 @@ export default {
     display flex
     height 40px
     line-height 40px
+    // background-color #f2f2f2
     font-size 14px
     .tab-item
       flex 1
       text-align center
       .tab-link
-        display inline-block
-        line-height 36px
-        padding 0 6px
+        padding 0 3px 5px 3px
         color $darkTextColor
       &.router-link-active
         .tab-link

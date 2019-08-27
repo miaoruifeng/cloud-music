@@ -9,26 +9,36 @@
         </slider>
         <hot-list :list="hotList"></hot-list>
       </div>
+      <div class="loading-container" v-if="showLoading">
+        <loading></loading>
+      </div>
     </scroll>
   </div>
 </template>
 
 <script>
+import { getSliderList, getHotSongList } from 'api/recommend'
+import Scroll from 'base/scroll/Scroll'
 import Slider from 'base/slider/Slider'
 import HotList from 'components/hotList/HotList'
-import Scroll from 'base/scroll/Scroll'
-import { getSliderList, getHotSongList } from 'api/recommend'
+import Loading from 'base/loading/Loading'
 export default {
   name: 'Recommend',
   components: {
     Slider,
     HotList,
-    Scroll
+    Scroll,
+    Loading
   },
   data () {
     return {
       slider: [],
       hotList: []
+    }
+  },
+  computed: {
+    showLoading () {
+      return !this.hotList.length
     }
   },
   methods: {
@@ -60,10 +70,15 @@ export default {
   .recommend
     overflow hidden
     position fixed
-    top 80px
+    top 84px
     bottom 0
     width 100%
     .recommend-content
       overflow hidden
       height 100%
+      .loading-container
+        position absolute
+        width: 100%
+        top: 50%
+        transform: translateY(-50%)
 </style>
