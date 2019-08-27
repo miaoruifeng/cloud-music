@@ -1,28 +1,29 @@
 <template>
   <div class="recommend">
-    <div class="recommend-content" ref="wrapper">
+    <scroll class="recommend-content" ref="scroll" :data="hotList">
       <div>
         <slider v-if="slider.length">
           <div v-for="(item, index) of slider" :key="index">
-            <img :src="item.picUrl" />
+            <img @load="loadImg" :src="item.picUrl" />
           </div>
         </slider>
         <hot-list :list="hotList"></hot-list>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script>
 import Slider from 'base/slider/Slider'
-import HotList from 'components/hotList/hotList'
-import BScroll from 'better-scroll'
+import HotList from 'components/hotList/HotList'
+import Scroll from 'base/scroll/Scroll'
 import { getSliderList, getHotSongList } from 'api/recommend'
 export default {
   name: 'Recommend',
   components: {
     Slider,
-    HotList
+    HotList,
+    Scroll
   },
   data () {
     return {
@@ -38,17 +39,19 @@ export default {
     },
     _getHotSongList () {
       getHotSongList().then((res) => {
-        console.log(res)
         this.hotList = res.data.data
       })
+    },
+    loadImg () {
+      if (!this.checkloaded) {
+        this.checkloaded = true
+        this.$refs.scroll.refresh()
+      }
     }
   },
   created () {
     this._getSliderList()
     this._getHotSongList()
-  },
-  mounted () {
-    this.scroll = new BScroll(this.$refs.wrapper)
   }
 }
 </script>
