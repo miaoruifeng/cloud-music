@@ -14,7 +14,6 @@ export default {
   methods: {
     _getSingerList () {
       getSingerList().then((res) => {
-        console.log('歌手列表：')
         console.log(res)
       })
     },

@@ -5,5 +5,5 @@ export function getSliderList () {
 }
 
 export function getHotSongList () {
-  return axios.get('/songList/hot')
+  return axios.get('/top/playlist')
 }

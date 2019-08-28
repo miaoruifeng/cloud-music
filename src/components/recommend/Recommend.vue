@@ -4,7 +4,7 @@
       <div>
         <slider v-if="slider.length">
           <div v-for="(item, index) of slider" :key="index">
-            <img @load="loadImg" :src="item.picUrl" />
+            <img @load="loadImg" :src="item.imageUrl" />
           </div>
         </slider>
         <hot-list :list="hotList"></hot-list>
@@ -44,12 +44,12 @@ export default {
   methods: {
     _getSliderList () {
       getSliderList().then((res) => {
-        this.slider = res.data.data
+        this.slider = res.data.banners
       })
     },
     _getHotSongList () {
       getHotSongList().then((res) => {
-        this.hotList = res.data.data
+        this.hotList = res.data.playlists
       })
     },
     loadImg () {

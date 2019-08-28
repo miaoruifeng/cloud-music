@@ -135,7 +135,7 @@ export default {
     .slider-group
       overflow: hidden
       height 0
-      padding-bottom 46.02%
+      padding-bottom 37.04%
       .slider-item
         float left
         box-sizing border-box
@@ -145,7 +145,7 @@ export default {
       position absolute
       left 0
       right 0
-      bottom 12px
+      bottom 10px
       text-align center
       .dot
         display inline-block
