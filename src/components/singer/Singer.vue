@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
     <list-view :list="singers"></list-view>
+    <alphabet :list="singers"></alphabet>
   </div>
 </template>
 
@@ -8,6 +9,7 @@
 import { getSingerList } from 'api/singer'
 import Singer from 'common/js/singer'
 import ListView from 'base/listview/ListView'
+import Alphabet from 'components/alphabet/Alphabet'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
@@ -15,7 +17,8 @@ const HOT_SINGER_LEN = 10
 export default {
   name: 'Singer',
   components: {
-    ListView
+    ListView,
+    Alphabet
   },
   data () {
     return {
