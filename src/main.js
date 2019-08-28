@@ -12,7 +12,7 @@ import 'stylus/common.styl'
 Vue.config.productionTip = false
 fastclick.attach(document.body)
 Vue.use(VueLazyLoad, {
-  loading: require('images/default.png')
+  loading: require('images/default_music.png')
 })
 
 /* eslint-disable no-new */
