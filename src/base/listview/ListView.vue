@@ -1,5 +1,12 @@
 <template>
-  <scroll class="listview" :data="list" ref="listview">
+  <scroll
+    class="listview"
+    ref="listview"
+    :data="list"
+    :probeType="probeType"
+    :listenScroll="listenScroll"
+    @scroll="scroll"
+  >
     <ul>
       <li class="item-group" v-for="(group, index) of list" :key="index" ref="listGroup">
         <h2 class="item-group-title border-bottom">{{group.title}}</h2>
@@ -27,8 +34,14 @@ export default {
       default: null
     },
     anchorIndex: {
-      type: [Number, String],
-      default: null
+      type: [String, Number],
+      default: ''
+    }
+  },
+  data () {
+    return {
+      scrollY: -1, // 观测实时滚动位置，默认-1
+      currentIndex: 0
     }
   },
   watch: {
@@ -36,7 +49,57 @@ export default {
       if (this.anchorIndex) {
         this.$refs.listview.scrollToElement(this.$refs.listGroup[this.anchorIndex], 1)
       }
+    },
+    // 监听计算高度的时机--list data发生变化时延时计算，数据变化到dom变化时有延时
+    list () {
+      setTimeout(() => {
+        this._calHeight()
+      }, 20)
+    },
+    // 判断scrollY落在哪个区间
+    scrollY (newY) {
+      const listHeight = this.listHeight
+      // 当滚动到顶部 newY>0
+      if (newY > 0) {
+        this.currentIndex = 0
+        return
+      }
+      // 中间部分滚动
+      for (let i = 0; i < listHeight.length - 1; i++) {
+        let height1 = listHeight[i]
+        let height2 = listHeight[i + 1]
+        if (-newY >= height1 && -newY <= height2) {
+          this.currentIndex = i
+          return
+        }
+      }
+      // 当滚动到底部，newY > 最后一个元素的上限
+      this.currentIndex = listHeight.length - 2
     }
+  },
+  methods: {
+    // 实时滚动位置通过scroll事件的pos.y赋值得到
+    scroll (pos) {
+      this.scrollY = pos.y
+      this.$emit('change', this.currentIndex)
+    },
+    // 计算当前滚动到区域（Grooup）的高度
+    _calHeight () {
+      this.listHeight = []
+      let height = 0
+      this.listHeight.push(height)
+      const list = this.$refs.listGroup
+      for (let i = 0; i < list.length; i++) {
+        let item = list[i]
+        height += item.clientHeight
+        this.listHeight.push(height)
+      }
+    }
+  },
+  created () {
+    this.probeType = 3
+    this.listenScroll = true
+    this.listHeight = []
   },
   beforeMount () {
     // 设置加载默认图片

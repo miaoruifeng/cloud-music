@@ -1,8 +1,8 @@
 <template>
   <div
     class="shortcut-list"
-    @touchstart.stop.prevent="onShortcutTouchStart"
-    @touchmove.stop.prevent="onShortcutTouchMove"
+    @touchstart="onShortcutTouchStart"
+    @touchmove.prevent="onShortcutTouchMove"
     @touchend.stop
   >
     <ul>
@@ -11,6 +11,7 @@
         v-for="(item, index) of shortcutList"
         :key="index"
         :data-index="index"
+        :class="{'active': currentIndex === index}"
       >
       {{item}}
       </li>
@@ -28,6 +29,10 @@ export default {
     list: {
       type: Array,
       default: null
+    },
+    currentIndex: {
+      type: [Number, String],
+      default: 0
     }
   },
   computed: {
@@ -36,6 +41,15 @@ export default {
         return group.title.substr(0, 1)
       })
     }
+    // idx: {
+    //   get: function () {
+    //     return this.currentIndex
+    //   },
+    //   set: function (index) {
+    //     console.log(index)
+    //     return index
+    //   }
+    // }
   },
   methods: {
     onShortcutTouchStart (e) {
@@ -43,6 +57,9 @@ export default {
       let firstTouch = e.touches[0]
       this.touch.y1 = firstTouch.pageY
       this.touch.anchorIndex = anchorIndex
+      if (!anchorIndex && anchorIndex !== 0) {
+        return
+      }
       this.$emit('change', anchorIndex)
     },
     onShortcutTouchMove (e) {
@@ -50,6 +67,11 @@ export default {
       this.touch.y2 = firstTouch.pageY
       let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
       let anchorIndex = parseInt(this.touch.anchorIndex) + delta
+      if (anchorIndex < 0) {
+        anchorIndex = 0
+      } else if (anchorIndex > this.list.length - 1) {
+        anchorIndex = this.list.length - 1
+      }
       this.$emit('change', anchorIndex)
     }
   },
@@ -60,6 +82,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  @import '~stylus/variable.styl'
   .shortcut-list
     display flex
     flex-direction column
@@ -68,10 +91,13 @@ export default {
     top 84px
     bottom 0
     right 0
+    z-index 10
     width 20px
     .item
       line-height 20px
       font-size 10px
       color #666
       text-align center
+      &.active
+        color $themeColor
 </style>

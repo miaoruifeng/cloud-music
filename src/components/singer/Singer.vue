@@ -1,7 +1,7 @@
 <template>
   <div class="singer">
-    <list-view :list="singers" :anchorIndex="anchorIndex"></list-view>
-    <alphabet :list="singers" @change="omChangeTouch"></alphabet>
+    <list-view :list="singers" :anchorIndex="anchorIndex" @change="onScrollChange"></list-view>
+    <alphabet :list="singers" :currentIndex="currentIndex" @change="onTouchChange"></alphabet>
   </div>
 </template>
 
@@ -23,7 +23,8 @@ export default {
   data () {
     return {
       singers: [],
-      anchorIndex: null
+      anchorIndex: '',
+      currentIndex: 0
     }
   },
   methods: {
@@ -81,8 +82,11 @@ export default {
       })
       return hot.concat(ret, els)
     },
-    omChangeTouch (index) {
+    onTouchChange (index) {
       this.anchorIndex = index
+    },
+    onScrollChange (index) {
+      this.currentIndex = index
     }
   },
   created () {
