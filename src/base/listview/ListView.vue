@@ -1,7 +1,7 @@
 <template>
-  <scroll class="listview" :data="list">
+  <scroll class="listview" :data="list" ref="listview">
     <ul>
-      <li class="item-group" v-for="(group, index) of list" :key="index">
+      <li class="item-group" v-for="(group, index) of list" :key="index" ref="listGroup">
         <h2 class="item-group-title border-bottom">{{group.title}}</h2>
         <ul>
           <li class="item border-bottom" v-for="item of group.items" :key="item.id">
@@ -25,6 +25,17 @@ export default {
     list: {
       type: Array,
       default: null
+    },
+    anchorIndex: {
+      type: [Number, String],
+      default: null
+    }
+  },
+  watch: {
+    anchorIndex () {
+      if (this.anchorIndex) {
+        this.$refs.listview.scrollToElement(this.$refs.listGroup[this.anchorIndex], 1)
+      }
     }
   },
   beforeMount () {

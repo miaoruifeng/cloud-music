@@ -1,10 +1,16 @@
 <template>
-  <div class="shot-list">
+  <div
+    class="shortcut-list"
+    @touchstart.stop.prevent="onShortcutTouchStart"
+    @touchmove.stop.prevent="onShortcutTouchMove"
+    @touchend.stop
+  >
     <ul>
       <li
         class="item"
-        v-for="(item, index) of shortList"
+        v-for="(item, index) of shortcutList"
         :key="index"
+        :data-index="index"
       >
       {{item}}
       </li>
@@ -13,6 +19,9 @@
 </template>
 
 <script>
+import { getData } from 'common/js/dom'
+
+const ANCHOR_HEIGHT = 20
 export default {
   name: 'Alphabet',
   props: {
@@ -22,17 +31,36 @@ export default {
     }
   },
   computed: {
-    shortList () {
+    shortcutList () {
       return this.list.map((group) => {
         return group.title.substr(0, 1)
       })
     }
+  },
+  methods: {
+    onShortcutTouchStart (e) {
+      let anchorIndex = getData(e.target, 'index')
+      let firstTouch = e.touches[0]
+      this.touch.y1 = firstTouch.pageY
+      this.touch.anchorIndex = anchorIndex
+      this.$emit('change', anchorIndex)
+    },
+    onShortcutTouchMove (e) {
+      let firstTouch = e.touches[0]
+      this.touch.y2 = firstTouch.pageY
+      let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
+      let anchorIndex = parseInt(this.touch.anchorIndex) + delta
+      this.$emit('change', anchorIndex)
+    }
+  },
+  created () {
+    this.touch = {}
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-  .shot-list
+  .shortcut-list
     display flex
     flex-direction column
     justify-content center
