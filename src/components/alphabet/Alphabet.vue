@@ -41,15 +41,6 @@ export default {
         return group.title.substr(0, 1)
       })
     }
-    // idx: {
-    //   get: function () {
-    //     return this.currentIndex
-    //   },
-    //   set: function (index) {
-    //     console.log(index)
-    //     return index
-    //   }
-    // }
   },
   methods: {
     onShortcutTouchStart (e) {
@@ -57,22 +48,25 @@ export default {
       let firstTouch = e.touches[0]
       this.touch.y1 = firstTouch.pageY
       this.touch.anchorIndex = anchorIndex
-      if (!anchorIndex && anchorIndex !== 0) {
-        return
-      }
-      this.$emit('change', anchorIndex)
+      this._scrollTo(anchorIndex)
     },
     onShortcutTouchMove (e) {
       let firstTouch = e.touches[0]
       this.touch.y2 = firstTouch.pageY
       let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
       let anchorIndex = parseInt(this.touch.anchorIndex) + delta
-      if (anchorIndex < 0) {
-        anchorIndex = 0
-      } else if (anchorIndex > this.list.length - 1) {
-        anchorIndex = this.list.length - 1
+      this._scrollTo(anchorIndex)
+    },
+    _scrollTo (index) {
+      if (!index && index !== 0) {
+        return
       }
-      this.$emit('change', anchorIndex)
+      if (index < 0) {
+        index = 0
+      } else if (index > this.list.length - 1) {
+        index = this.list.length - 1
+      }
+      this.$emit('change', index)
     }
   },
   created () {

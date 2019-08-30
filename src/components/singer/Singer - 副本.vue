@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-    <list-view :list="singers"></list-view>
+    <list-view :list="singers" :anchorIndex="anchorIndex" @change="onScrollChange"></list-view>
+    <alphabet :list="singers" :currentIndex="currentIndex" @change="onTouchChange"></alphabet>
   </div>
 </template>
 
@@ -8,6 +9,7 @@
 import { getSingerList } from 'api/singer'
 import Singer from 'common/js/singer'
 import ListView from 'base/listview/ListView'
+import Alphabet from 'components/alphabet/Alphabet'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
@@ -15,11 +17,14 @@ const HOT_SINGER_LEN = 10
 export default {
   name: 'Singer',
   components: {
-    ListView
+    ListView,
+    Alphabet
   },
   data () {
     return {
-      singers: []
+      singers: [],
+      anchorIndex: '',
+      currentIndex: 0
     }
   },
   methods: {
@@ -76,6 +81,12 @@ export default {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0)
       })
       return hot.concat(ret, els)
+    },
+    onTouchChange (index) {
+      this.anchorIndex = index
+    },
+    onScrollChange (index) {
+      this.currentIndex = index
     }
   },
   created () {
