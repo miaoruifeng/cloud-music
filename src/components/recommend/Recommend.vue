@@ -20,7 +20,7 @@
 import { getSliderList, getHotSongList } from 'api/recommend'
 import Scroll from 'base/scroll/Scroll'
 import Slider from 'base/slider/Slider'
-import HotList from 'components/hotList/HotList'
+import HotList from 'components/hot-list/HotList'
 import Loading from 'base/loading/Loading'
 export default {
   name: 'Recommend',
