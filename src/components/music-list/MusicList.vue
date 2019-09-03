@@ -1,11 +1,17 @@
 <template>
   <div class="music-list">
     <h1 class="title" v-html="title"></h1>
-    <div class="back">
+    <div class="back" @click="onBack">
       <i class="icon-back"></i>
     </div>
     <div class="bg-img" :style="bgStyle" ref="bgImg">
       <div class="mask" ref="mask"></div>
+      <div class="play-wrapper">
+        <div class="play" ref="playBtn" v-show="songs.length > 0">
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div>
     </div>
     <div class="bg-layer" ref="bgLayer"></div>
     <scroll
@@ -19,6 +25,9 @@
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
       </div>
+      <div class="loading-container" v-show="!songs.length">
+        <loading></loading>
+      </div>
     </scroll>
   </div>
 </template>
@@ -26,13 +35,20 @@
 <script>
 import Scroll from 'base/scroll/Scroll'
 import SongList from 'base/song-list/SongList'
+import Loading from 'base/loading/Loading'
+import { prefixStyle } from 'common/js/dom'
 
 const RESERVED_HEIGHT = 40
+
+const transform = prefixStyle('transform')
+// const backdrop = prefixStyle('backdrop-filter')
+
 export default {
   name: 'MusicList',
   components: {
     Scroll,
-    SongList
+    SongList,
+    Loading
   },
   props: {
     title: {
@@ -61,6 +77,9 @@ export default {
   methods: {
     scroll (pos) {
       this.scrollY = pos.y
+    },
+    onBack () {
+      this.$router.back()
     }
   },
   watch: {
@@ -70,16 +89,18 @@ export default {
       let scale = 1
       let blur = 0
       const percent = Math.abs(newY / this.bgImgHeight)
-      this.$refs.bgLayer.style['transform'] = `translate3d(0, ${traslateY}px, 0)`
-      this.$refs.bgLayer.style['webkitTransform'] = `translate3d(0, ${traslateY}px, 0)`
+      this.$refs.bgLayer.style[transform] = `translate3d(0, ${traslateY}px, 0)`
+      // this.$refs.bgLayer.style['webkitTransform'] = `translate3d(0, ${traslateY}px, 0)`
       // 设置往上滚动 到title告高度时不再往上滚
       if (newY < this.minTransalteY) {
         zIndex = 10
         this.$refs.bgImg.style.height = `${RESERVED_HEIGHT}px`
         this.$refs.bgImg.style.paddingTop = 0
+        this.$refs.playBtn.style.display = 'none'
       } else {
         this.$refs.bgImg.style.height = 0
         this.$refs.bgImg.style.paddingTop = '70%'
+        this.$refs.playBtn.style.display = ''
       }
       this.$refs.bgImg.style.zIndex = zIndex
       // 设置下拉时背景图拉伸效果 和上滑时背景图高斯模糊效果
@@ -89,8 +110,8 @@ export default {
       } else {
         blur = Math.min(20, percent * 20)
       }
-      this.$refs.bgImg.style['transform'] = `scale(${scale})`
-      this.$refs.bgImg.style['webkitTransform'] = `scale(${scale})`
+      this.$refs.bgImg.style[transform] = `scale(${scale})`
+      // this.$refs.bgImg.style['webkitTransform'] = `scale(${scale})`
       this.$refs.mask.style['backdrop-filter'] = `blur(${blur}px)`
       this.$refs.mask.style['webkitBackdrop-filter'] = `blur(${blur}px)`
     }
@@ -155,6 +176,28 @@ export default {
         width 100%
         height 100%
         background-color rgba(7, 17, 27, 0.4)
+      .play-wrapper
+        z-index: 50
+        position: absolute
+        bottom: 20px
+        width: 100%
+        .play
+          display flex
+          justify-content center
+          align-items center
+          width: 135px
+          padding: 7px 0
+          margin: 0 auto
+          box-sizing: border-box
+          border: 1px solid $themeColorDark
+          border-radius: 100px
+          color: $themeColorDark
+          text-align: center
+          .icon-play
+            margin-right: 6px
+            font-size: 15px
+          .text
+            font-size: 13px
     .bg-layer
       position relative
       height 100%
@@ -166,4 +209,9 @@ export default {
       bottom: 0
       width: 100%
       background-color: $bgColor
+      .loading-container
+        position: absolute
+        width: 100%
+        top: 50%
+        transform: translateY(-50%)
 </style>

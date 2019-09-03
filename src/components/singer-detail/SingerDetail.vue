@@ -34,10 +34,11 @@ export default {
     _getSingerDetail () {
       if (!this.singer.id) {
         this.$router.push('/singer')
+        return
       }
       getSingerDetail(this.singer.id).then((res) => {
         this.songs = this._nomalizeSong(res.data.list)
-        console.log(this.songs)
+        // console.log(this.songs)
       })
     },
     _nomalizeSong (list) {
@@ -60,15 +61,7 @@ export default {
 <style lang="stylus" scoped>
   @import '~stylus/variable.styl'
   .slide-enter-active, .slide-leave-active
-    transition all .3s
+    transition all 0.3s
   .slide-enter, .slide-leave-to
     transform translate3d(100%, 0, 0)
-  .singer-detail
-    position fixed
-    top 0
-    left 0
-    right 0
-    bottom 0
-    z-index 100
-    background-color $bgColor
 </style>
