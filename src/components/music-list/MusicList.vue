@@ -1,7 +1,7 @@
 <template>
   <div class="music-list">
     <h1 class="title" v-html="title"></h1>
-    <div class="back" @click="onBack">
+    <div class="back" @click="back">
       <i class="icon-back"></i>
     </div>
     <div class="bg-img" :style="bgStyle" ref="bgImg">
@@ -23,7 +23,7 @@
       @scroll="scroll"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs" @select="selectItem"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -37,6 +37,7 @@ import Scroll from 'base/scroll/Scroll'
 import SongList from 'base/song-list/SongList'
 import Loading from 'base/loading/Loading'
 import { prefixStyle } from 'common/js/dom'
+import { mapActions } from 'vuex'
 
 const RESERVED_HEIGHT = 40
 
@@ -78,9 +79,18 @@ export default {
     scroll (pos) {
       this.scrollY = pos.y
     },
-    onBack () {
+    back () {
       this.$router.back()
-    }
+    },
+    selectItem (item, index) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
   watch: {
     scrollY (newY) {
