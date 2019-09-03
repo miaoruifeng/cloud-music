@@ -38,7 +38,7 @@ export default {
       }
       getSingerDetail(this.singer.id).then((res) => {
         this.songs = this._nomalizeSong(res.data.list)
-        // console.log(this.songs)
+        console.log(this.songs)
       })
     },
     _nomalizeSong (list) {

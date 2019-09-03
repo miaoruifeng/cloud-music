@@ -69,6 +69,7 @@
         </div>
       </div>
     </transition>
+    <audio :src="currentSong.url" ref="audio"></audio>
   </div>
 </template>
 
@@ -87,6 +88,13 @@ export default {
       'playList',
       'currentSong'
     ])
+  },
+  watch: {
+    currentSong () {
+      this.$nextTick(() => {
+        this.$refs.audio.play()
+      })
+    }
   },
   methods: {
     /* normal - mini播放器之前的切换 */
