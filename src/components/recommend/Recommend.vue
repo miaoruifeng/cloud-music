@@ -1,13 +1,15 @@
 <template>
   <div class="recommend">
-    <scroll class="recommend-content" ref="scroll" :data="hotList">
+    <scroll class="recommend-content" ref="scroll" :data="discList">
       <div>
         <slider v-if="slider.length">
-          <div v-for="(item, index) of slider" :key="index">
-            <img @load="loadImg" :src="item.imageUrl" />
+          <div v-for="item of slider" :key="item.id">
+            <a :href="item.linkUrl">
+              <img @load="loadImg" :src="item.picUrl">
+            </a>
           </div>
         </slider>
-        <hot-list :list="hotList"></hot-list>
+        <disc-list :list="discList"></disc-list>
       </div>
       <div class="loading-container" v-if="showLoading">
         <loading></loading>
@@ -17,39 +19,45 @@
 </template>
 
 <script>
-import { getSliderList, getHotSongList } from 'api/recommend'
+import { getSliderList, getDiscList } from 'api/recommend'
 import Scroll from 'base/scroll/Scroll'
 import Slider from 'base/slider/Slider'
-import HotList from 'components/hot-list/HotList'
+import DiscList from 'components/disc-list/DiscList'
 import Loading from 'base/loading/Loading'
+
+import { ERR_OK } from 'api/config'
 export default {
   name: 'Recommend',
   components: {
     Slider,
-    HotList,
+    DiscList,
     Scroll,
     Loading
   },
   data () {
     return {
       slider: [],
-      hotList: []
+      discList: []
     }
   },
   computed: {
     showLoading () {
-      return !this.hotList.length
+      return !this.discList.length
     }
   },
   methods: {
     _getSliderList () {
       getSliderList().then((res) => {
-        this.slider = res.data.banners
+        if (res.code === ERR_OK) {
+          this.slider = res.data.slider
+        }
       })
     },
-    _getHotSongList () {
-      getHotSongList().then((res) => {
-        this.hotList = res.data.playlists
+    _getDiscList () {
+      getDiscList().then((res) => {
+        if (res.code === ERR_OK) {
+          this.discList = res.data.list
+        }
       })
     },
     loadImg () {
@@ -61,7 +69,7 @@ export default {
   },
   created () {
     this._getSliderList()
-    this._getHotSongList()
+    this._getDiscList()
   }
 }
 </script>

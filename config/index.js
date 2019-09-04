@@ -11,15 +11,15 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        // target: 'https://v1.itooi.cn/netease/',
-        target: 'http://47.105.150.105:4001/',
-        changeOrigin: true,
-        ws: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
+      // '/api': {
+      //   // target: 'https://v1.itooi.cn/netease/',
+      //   target: 'http://47.105.150.105:4001/',
+      //   changeOrigin: true,
+      //   ws: true,
+      //   pathRewrite: {
+      //     '^/api': ''
+      //   }
+      // }
     },
 
     // Various Dev Server settings

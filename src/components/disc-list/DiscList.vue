@@ -1,12 +1,12 @@
 <template>
-  <div class="hot-list">
+  <div class="disc-list">
     <h1 class="list-title">热门歌单推荐</h1>
     <ul>
-      <li class="item border-bottom" v-for="item of list" :key="item.id">
-        <img class="item-img" v-lazy="item.coverImgUrl" />
+      <li class="item border-bottom" v-for="item of list" :key="item.dissid">
+        <img class="item-img" v-lazy="item.imgurl" />
         <div class="item-text">
-          <h2 class="item-name">{{item.name}}</h2>
-          <p class="item-disc">{{item.description}}</p>
+          <h2 class="item-name">{{item.dissname}}</h2>
+          <p class="item-disc">{{item.creator.name}}</p>
         </div>
       </li>
     </ul>
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'HotList',
+  name: 'DiscList',
   props: {
     list: Array
   }
@@ -28,7 +28,7 @@ export default {
   .border-bottom
     &:before
       border-color #ccc
-  .hot-list
+  .disc-list
     padding 0 12px
     .list-title
       height 1.0rem

@@ -135,10 +135,13 @@ export default {
     .slider-group
       overflow: hidden
       height 0
-      padding-bottom 37.04%
+      padding-bottom 40%
       .slider-item
         float left
         box-sizing border-box
+        a
+          display inline-block
+          width 100%
         img
           width 100%
     .dots
