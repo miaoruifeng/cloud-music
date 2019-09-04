@@ -9,6 +9,7 @@ import { mapGetters } from 'vuex'
 import { getSingerDetail } from 'api/singer'
 import { createSong } from 'common/js/song'
 import MusicList from 'components/music-list/MusicList'
+import { ERR_OK } from 'api/config.js'
 export default {
   name: 'SingerDetail',
   components: {
@@ -37,8 +38,9 @@ export default {
         return
       }
       getSingerDetail(this.singer.id).then((res) => {
-        this.songs = this._nomalizeSong(res.data.list)
-        console.log(this.songs)
+        if (res.code === ERR_OK) {
+          this.songs = this._nomalizeSong(res.data.list)
+        }
       })
     },
     _nomalizeSong (list) {
