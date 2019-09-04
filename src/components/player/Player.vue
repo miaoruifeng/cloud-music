@@ -22,7 +22,7 @@
           <div class="middle-l">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd">
-                <img class="cd-img" :src="currentSong.image"/>
+                <img class="cd-img" :class="cdClass" :src="currentSong.image"/>
               </div>
             </div>
           </div>
@@ -32,14 +32,14 @@
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
-              <i class="icon-prev"></i>
+            <div class="icon i-left" :class="disableClass">
+              <i class="icon-prev" @click="handlePrevClick"></i>
             </div>
-            <div class="icon i-center">
-              <i class="icon-play"></i>
+            <div class="icon i-center" :class="disableClass">
+              <i :class="iconPlay" @click="handleTogglePlay"></i>
             </div>
-            <div class="icon i-right">
-              <i class="icon-next"></i>
+            <div class="icon i-right" :class="disableClass">
+              <i class="icon-next" @click="handleNextClick"></i>
             </div>
             <div class="icon i-right">
               <i class="icon icon-not-favorite"></i>
@@ -52,7 +52,7 @@
       <div class="mini-player" v-show="!fullScreen" @click="openFullScreen">
         <div class="mini-l">
           <div class="icon">
-            <img class="img-cover" :src="currentSong.image"/>
+            <img class="img-cover" :class="cdClass" :src="currentSong.image"/>
           </div>
           <div class="text">
             <h2 class="name" v-html="currentSong.name"></h2>
@@ -61,7 +61,7 @@
         </div>
         <div class="mini-r">
           <div class="control">
-            <i class="icon-mini icon-play-mini"></i>
+            <i :class="iconMini" @click.stop="handleTogglePlay"></i>
           </div>
           <div class="control">
             <i class="icon-playlist"></i>
@@ -69,7 +69,7 @@
         </div>
       </div>
     </transition>
-    <audio :src="currentSong.url" ref="audio"></audio>
+    <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error"></audio>
   </div>
 </template>
 
@@ -82,17 +82,42 @@ const transform = prefixStyle('transform')
 
 export default {
   name: 'Player',
+  data () {
+    return {
+      songReady: false
+    }
+  },
   computed: {
+    iconPlay () {
+      return this.playing ? 'icon-pause' : 'icon-play'
+    },
+    iconMini () {
+      return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+    },
+    cdClass () {
+      return this.playing ? 'play' : 'play pause'
+    },
+    disableClass () {
+      return this.songReady ? '' : 'disable'
+    },
     ...mapGetters([
       'fullScreen',
       'playList',
-      'currentSong'
+      'currentSong',
+      'playing',
+      'currentIndex'
     ])
   },
   watch: {
     currentSong () {
       this.$nextTick(() => {
         this.$refs.audio.play()
+      })
+    },
+    playing () {
+      this.$nextTick(() => {
+        const audio = this.$refs.audio
+        this.playing ? audio.play() : audio.pause()
       })
     }
   },
@@ -144,6 +169,46 @@ export default {
       this.$refs.cdWrapper.style.transition = ''
       this.$refs.cdWrapper.style[transform] = ''
     },
+    handleTogglePlay () {
+      if (!this.songReady) {
+        return
+      }
+      this.setPlayingState(!this.playing)
+    },
+    handleNextClick () {
+      if (!this.songReady) {
+        return
+      }
+      let index = this.currentIndex + 1
+      if (index === this.playList.length) {
+        index = 0
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.handleTogglePlay()
+      }
+      this.songReady = true
+    },
+    handlePrevClick () {
+      if (!this.songReady) {
+        return
+      }
+      let index = this.currentIndex - 1
+      if (index === 0) {
+        index = this.playList.length - 1
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.handleTogglePlay()
+      }
+      this.songReady = true
+    },
+    ready () {
+      this.songReady = true
+    },
+    error () {
+      this.songReady = true
+    },
     // normal - mini之间切换，获取初始位置和大小方法
     _getPosAndScale () {
       const targetWidth = 40
@@ -161,7 +226,9 @@ export default {
       }
     },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN'
+      setFullScreen: 'SET_FULL_SCREEN',
+      setPlayingState: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
     })
   }
 }
@@ -256,6 +323,10 @@ export default {
                 width: 100%
                 height: 100%
                 border-radius: 50%
+                &.play
+                  animation: rotate 20s linear infinite
+                &.pause
+                  animation-play-state: paused
       .bottom
         position: absolute
         bottom: 1.0rem
@@ -302,9 +373,13 @@ export default {
           width 40px
           height 40px
           margin-right 10px
-          img
+          .img-cover
             width 100%
             border-radius 50%
+            &.play
+              animation: rotate 20s linear infinite
+            &.pause
+              animation-play-state: paused
         .text
           overflow hidden
           display flex
@@ -329,4 +404,9 @@ export default {
           i
             font-size 25px
             color $darkThemeColor
+  @keyframes rotate
+    0%
+      transform: rotate(0)
+    100%
+      transform: rotate(360deg)
 </style>
