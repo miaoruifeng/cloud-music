@@ -9,10 +9,10 @@
   >
     <ul>
       <li class="item-group" v-for="(group, index) of list" :key="index" ref="listGroup">
-        <h2 class="item-group-title border-bottom">{{group.title}}</h2>
+        <h2 class="item-group-title">{{group.title}}</h2>
         <ul>
           <li
-            class="group-item border-bottom"
+            class="group-item"
             v-for="item of group.items"
             :key="item.id"
             @click="selectItem(item)"
@@ -25,9 +25,9 @@
     </ul>
     <div
       class="list-shortcut"
-      @touchstart.stop.prevent="onShortcutTouchStart"
+      @touchstart="onShortcutTouchStart"
       @touchmove.stop.prevent="onShortcutTouchMove"
-      @touchend.stop
+      @touchend="onShortcutTouchEnd"
     >
       <ul>
         <li
@@ -36,13 +36,14 @@
           :key="index"
           :data-index="index"
           :class="{'active': currentIndex === index}"
-        >
-        {{item}}
-        </li>
+        >{{item}}</li>
       </ul>
     </div>
     <div class="list-fixed" v-show="fixedTitle" ref="fixedTitle">
       <h2 class="fixed-title">{{fixedTitle}}</h2>
+    </div>
+    <div class="fixed-container" v-if="showCurShortcut && fixedTitle && currentIndex > 0">
+      <span class="current-shortcut">{{fixedTitle}}</span>
     </div>
     <div class="loading-container" v-show="showLoading">
       <loading></loading>
@@ -55,7 +56,7 @@ import { getData } from 'common/js/dom'
 import Scroll from 'base/scroll/Scroll'
 import Loading from 'base/loading/Loading'
 
-const ANCHOR_HEIGHT = 20
+const ANCHOR_HEIGHT = 18
 const TITLE_HEIGHT = 26
 
 export default {
@@ -74,7 +75,8 @@ export default {
     return {
       scrollY: -1, // 观测实时滚动位置，默认-1
       currentIndex: 0,
-      diff: -1
+      diff: -1,
+      showCurShortcut: false
     }
   },
   computed: {
@@ -135,6 +137,7 @@ export default {
       this.$emit('select', item)
     },
     onShortcutTouchStart (e) {
+      this.showCurShortcut = true
       let anchorIndex = getData(e.target, 'index')
       let firstTouch = e.touches[0]
       this.touch.y1 = firstTouch.pageY
@@ -147,6 +150,9 @@ export default {
       let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
       let anchorIndex = parseInt(this.touch.anchorIndex) + delta
       this._scrollTo(anchorIndex)
+    },
+    onShortcutTouchEnd (e) {
+      this.showCurShortcut = false
     },
     // 实时滚动位置通过scroll事件的pos.y赋值得到
     scroll (pos) {
@@ -195,9 +201,6 @@ export default {
 
 <style lang="stylus" scoped>
   @import '~stylus/variable.styl'
-  .border-bottom
-    &:before
-      border-color #ccc
   .list-view
     overflow hidden
     position relative
@@ -206,13 +209,13 @@ export default {
     .item-group-title
       padding-left 12px
       line-height 26px
-      background-color #f0f0f0
-      font-size 12px
-      color $darkTextColor
+      background-color $bghighLighttColor
+      font-size $font-12
+      color $textColorG
     .group-item
       display flex
       align-items center
-      padding 0.16rem
+      padding 0.2rem
       padding-left 12px
       .item-img
         width 0.96rem
@@ -220,22 +223,26 @@ export default {
         border-radius .06rem
         margin-right 0.24rem
       .item-name
-        font-size 13px
-        color $grayTextColor
+        font-size font-13
+        color $textColorG
     .list-shortcut
       display flex
       flex-direction column
       justify-content center
-      position absolute
-      top 0
-      bottom 0
-      right 0
       z-index 10
+      position absolute
+      right 0
+      top 50%
+      transform translateY(-50%)
       width 20px
+      padding 0.26rem 0
+      background-color $bgDarkColor
+      border-radius 15px
+      font-family Helvetica
       .item
-        line-height 20px
-        font-size 10px
-        color #666
+        line-height 18px
+        font-size $font-10
+        color $textColorG
         text-align center
         &.active
           color $themeColor
@@ -247,12 +254,23 @@ export default {
       .fixed-title
         padding-left 12px
         line-height 26px
-        background-color #f0f0f0
-        font-size 12px
-        color $darkTextColor
+        background-color $bghighLighttColor
+        font-size $font-12
+        color $textColorG
     .loading-container
       position absolute
       width: 100%
       top: 50%
       transform: translateY(-50%)
+    .fixed-container
+      position absolute
+      width: 100%
+      top: 50%
+      transform: translateY(-50%)
+      text-align center
+      .current-shortcut
+        padding: .40rem
+        background-color: $bgDarkColor
+        color: $themeColor
+        font-size: $font-18
 </style>

@@ -41,24 +41,24 @@ export default {
   @import '~stylus/mixin.styl'
   .border-bottom
     &:before
-      border-color #ccc
+      border-color $bgDialogColor
   .song-list
     .item
       overflow hidden
       display flex
       align-items center
       box-sizing border-box
-      padding .14rem 12px
+      padding .20rem .40rem
       .item-content
         overflow hidden
         flex 1
-        line-height .44rem
+        line-height .48rem
         .item-name
-          font-size 15px
-          color $darkTextColor
+          font-size $font-14
+          color $textColorL
           ellipsis()
         .item-desc
-          font-size 12px
-          color $lightTextColor
+          font-size $font-12
+          color $textColorG
           ellipsis()
 </style>

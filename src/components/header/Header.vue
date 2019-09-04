@@ -13,8 +13,8 @@ export default {
   .header
     height 44px
     line-height 44px
-    background-color $themeColor
-    color #fff
-    font-size 16px
+    background-color $bgColor
+    color $themeColor
+    font-size $font-18
     text-align center
 </style>

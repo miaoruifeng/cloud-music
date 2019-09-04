@@ -156,9 +156,9 @@ export default {
         height 8px
         margin 0 0.08rem
         border-radius 50%
-        background-color #fff
+        background-color $textColorL
         &.active
-          // width 18px
-          // border-radius 8px
+          width 18px
+          border-radius 8px
           background-color $themeColor
 </style>

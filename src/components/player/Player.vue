@@ -49,7 +49,7 @@
       </div>
     </transition>
     <transition>
-      <div class="mini-player border-top" v-show="!fullScreen" @click="openFullScreen">
+      <div class="mini-player" v-show="!fullScreen" @click="openFullScreen">
         <div class="mini-l">
           <div class="icon">
             <img class="img-cover" :src="currentSong.image"/>
@@ -170,9 +170,6 @@ export default {
 <style lang="stylus" scoped>
   @import '~stylus/variable.styl'
   @import '~stylus/mixin.styl'
-  .border-top
-    &:before
-      border-color #eee
   .player
     .normal-player
       z-index 200
@@ -207,22 +204,22 @@ export default {
           text-align center
           .icon-back
             display inline-block
-            font-size 14px
+            font-size $font-16
             color $themeColor
             transform: rotate(-90deg)
         .title
           width 80%
           margin 0 auto
           line-height 40px
-          font-size 16px
-          color #fff
+          font-size $font-16
+          color $textColorL
           text-align center
           ellipsis()
         .subtitle
           line-height 20px
           margin 0 auto
-          font-size 13px
-          color #fff
+          font-size $font-13
+          color $textColorL
           text-align center
           ellipsis()
       .middle
@@ -268,10 +265,10 @@ export default {
           align-items: center
           justify-content space-around
           padding 0 0.30rem
+          color $themeColor
           .icon
-            color #fff
             i
-              font-size .60rem
+              font-size 30px
       &.normal-enter-active, &.normal-leave-active
         transition all 0.4s
         .top, .bottom
@@ -292,8 +289,7 @@ export default {
       align-items center
       width 100%
       height 60px
-      background-color $bgColor
-      border-top 1px solid #eee
+      background-color $bghighLighttColor
       &.mini-enter-active, &.mini-leave-active
         transition all 0.4s
       &.mini-enter, &.mini-leave-to
@@ -305,7 +301,7 @@ export default {
         .icon
           width 40px
           height 40px
-          margin-right 8px
+          margin-right 10px
           img
             width 100%
             border-radius 50%
@@ -314,14 +310,14 @@ export default {
           display flex
           flex-direction column
           justify-content center
-          line-height 18px
+          line-height 20px
           .name
-            font-size 14px
-            color $darkTextColor
+            font-size $font-13
+            color $textColorGL
             ellipsis()
           .desc
-            font-size 11px
-            color $lightTextColor
+            font-size $font-10
+            color $textColorG
             ellipsis()
       .mini-r
         display flex
@@ -332,7 +328,5 @@ export default {
           width 30px
           i
             font-size 25px
-            color #333
-            &.icon-playlist
-              color $themeColor
+            color $darkThemeColor
 </style>

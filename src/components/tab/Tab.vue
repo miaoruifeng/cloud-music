@@ -25,16 +25,15 @@ export default {
   @import '~stylus/variable.styl'
   .tab
     display flex
-    height 40px
-    line-height 40px
-    // background-color #f2f2f2
-    font-size 14px
+    height 44px
+    line-height 44px
+    font-size $font-14
     .tab-item
       flex 1
       text-align center
       .tab-link
         padding 0 3px 5px 3px
-        color $darkTextColor
+        color $textColorG
       &.router-link-active
         .tab-link
           color $themeColor

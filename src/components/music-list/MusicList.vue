@@ -1,9 +1,9 @@
 <template>
   <div class="music-list">
-    <h1 class="title" v-html="title"></h1>
     <div class="back" @click="back">
       <i class="icon-back"></i>
     </div>
+    <h1 class="title" v-html="title"></h1>
     <div class="bg-img" :style="bgStyle" ref="bgImg">
       <div class="mask" ref="mask"></div>
       <div class="play-wrapper">
@@ -97,9 +97,15 @@ export default {
       let scale = 1
       let blur = 0
       const percent = Math.abs(newY / this.bgImgHeight)
+      if (newY > 0) {
+        scale = 1 + percent
+        zIndex = 10
+      } else {
+        blur = Math.min(20, percent * 20)
+      }
       this.$refs.bgLayer.style[transform] = `translate3d(0, ${traslateY}px, 0)`
-      // this.$refs.bgLayer.style['webkitTransform'] = `translate3d(0, ${traslateY}px, 0)`
-      // 设置往上滚动 到title告高度时不再往上滚
+      this.$refs.mask.style['backdrop-filter'] = `blur(${blur}px)`
+      this.$refs.mask.style['webkitBackdrop-filter'] = `blur(${blur}px)`
       if (newY < this.minTransalteY) {
         zIndex = 10
         this.$refs.bgImg.style.height = `${RESERVED_HEIGHT}px`
@@ -111,17 +117,7 @@ export default {
         this.$refs.playBtn.style.display = ''
       }
       this.$refs.bgImg.style.zIndex = zIndex
-      // 设置下拉时背景图拉伸效果 和上滑时背景图高斯模糊效果
-      if (newY > 0) {
-        scale = 1 + percent
-        zIndex = 10
-      } else {
-        blur = Math.min(20, percent * 20)
-      }
       this.$refs.bgImg.style[transform] = `scale(${scale})`
-      // this.$refs.bgImg.style['webkitTransform'] = `scale(${scale})`
-      this.$refs.mask.style['backdrop-filter'] = `blur(${blur}px)`
-      this.$refs.mask.style['webkitBackdrop-filter'] = `blur(${blur}px)`
     }
   },
   created () {
@@ -147,17 +143,6 @@ export default {
     bottom 0
     right 0
     background-color $bgColor
-    .title
-      z-index 50
-      position absolute
-      top 0
-      left 10%
-      width 80%
-      line-height 40px
-      font-size 16px
-      color #fff
-      text-align center
-      ellipsis()
     .back
       z-index 50
       position absolute
@@ -168,8 +153,19 @@ export default {
       line-height 40px
       text-align center
       .icon-back
-        font-size 14px
+        font-size $font-16
         color $themeColor
+    .title
+      z-index 50
+      position absolute
+      top 0
+      left 10%
+      width 80%
+      line-height 40px
+      font-size $font-16
+      color $textColorL
+      text-align center
+      ellipsis()
     .bg-img
       position relative
       width 100%
@@ -197,15 +193,15 @@ export default {
           padding: 7px 0
           margin: 0 auto
           box-sizing: border-box
-          border: 1px solid $themeColorDark
+          border: 1px solid $themeColor
           border-radius: 100px
-          color: $themeColorDark
+          color: $themeColor
           text-align: center
           .icon-play
             margin-right: 6px
-            font-size: 15px
+            font-size: $font-15
           .text
-            font-size: 13px
+            font-size: $font-13
     .bg-layer
       position relative
       height 100%

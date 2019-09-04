@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide">
+  <transition appear name="slide">
     <music-list :title="title" :bg-img="bgImg" :songs="songs"></music-list>
   </transition>
 </template>

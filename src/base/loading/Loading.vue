@@ -18,6 +18,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+  @import '~stylus/variable.styl'
   .loading
     width 100%
     text-align center
@@ -26,6 +27,6 @@ export default {
       height .48rem
     .desc
       line-height 0.7rem
-      font-size 12px
-      color #999
+      font-size $font-12
+      color $textColorGL
 </style>

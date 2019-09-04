@@ -2,7 +2,7 @@
   <div class="disc-list">
     <h1 class="list-title">热门歌单推荐</h1>
     <ul>
-      <li class="item border-bottom" v-for="item of list" :key="item.dissid">
+      <li class="item" v-for="item of list" :key="item.dissid">
         <img class="item-img" v-lazy="item.imgurl" />
         <div class="item-text">
           <h2 class="item-name">{{item.dissname}}</h2>
@@ -25,15 +25,12 @@ export default {
 <style lang="stylus" scoped>
   @import '~stylus/variable.styl'
   @import '~stylus/mixin.styl'
-  .border-bottom
-    &:before
-      border-color #ccc
   .disc-list
     padding 0 12px
     .list-title
       height 1.0rem
       line-height 1.2rem
-      font-size 16px
+      font-size $font-14
       color $themeColor
       text-align center
     .item
@@ -46,19 +43,18 @@ export default {
         display block
         width 1.2rem
         height 1.2rem
-        padding 0.20rem
-        padding-left 0
+        padding 0.2rem 0.3rem 0.2rem 0
       .item-text
         flex 1
         padding 0.20rem 0
         line-height: 0.58rem
         min-width 0
         .item-name
-          font-size 15px
-          color $darkTextColor
+          font-size $font-14
+          color $textColorL
           ellipsis()
         .item-disc
-          font-size 12px
-          color $lightTextColor
+          font-size $font-12
+          color $textColorG
           ellipsis()
 </style>

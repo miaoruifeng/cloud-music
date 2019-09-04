@@ -106,7 +106,7 @@ export default {
   .singer
     overflow hidden
     position fixed
-    top 84px
+    top 88px
     bottom 0
     width 100%
 </style>
