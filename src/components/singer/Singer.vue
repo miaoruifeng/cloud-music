@@ -10,8 +10,8 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { getSingerList } from 'api/singer'
 import { ERR_OK } from 'api/config.js'
+import { getSingerList } from 'api/singer'
 import Singer from 'common/js/singer'
 import ListView from 'base/listview/ListView'
 import Loading from 'base/loading/Loading'

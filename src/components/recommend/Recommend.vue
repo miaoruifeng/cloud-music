@@ -19,13 +19,12 @@
 </template>
 
 <script>
+import { ERR_OK } from 'api/config'
 import { getSliderList, getDiscList } from 'api/recommend'
 import Scroll from 'base/scroll/Scroll'
 import Slider from 'base/slider/Slider'
-import DiscList from 'components/disc-list/DiscList'
 import Loading from 'base/loading/Loading'
-
-import { ERR_OK } from 'api/config'
+import DiscList from 'components/disc-list/DiscList'
 export default {
   name: 'Recommend',
   components: {

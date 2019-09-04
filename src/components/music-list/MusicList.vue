@@ -33,17 +33,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import { prefixStyle } from 'common/js/dom'
 import Scroll from 'base/scroll/Scroll'
 import SongList from 'base/song-list/SongList'
 import Loading from 'base/loading/Loading'
-import { prefixStyle } from 'common/js/dom'
-import { mapActions } from 'vuex'
 
 const RESERVED_HEIGHT = 40
-
 const transform = prefixStyle('transform')
 // const backdrop = prefixStyle('backdrop-filter')
-
 export default {
   name: 'MusicList',
   components: {
