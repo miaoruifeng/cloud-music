@@ -68,7 +68,9 @@
         </div>
         <div class="mini-r">
           <div class="control">
-            <i :class="iconMini" @click.stop="handleTogglePlay"></i>
+            <progress-circle :radius="32" :percent="percent">
+              <i class="icon-mini" :class="iconMini" @click.stop="handleTogglePlay"></i>
+            </progress-circle>
           </div>
           <div class="control">
             <i class="icon-playlist"></i>
@@ -91,13 +93,15 @@ import { mapGetters, mapMutations } from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
 import ProgressBar from 'base/progress-bar/ProgressBar'
+import ProgressCircle from 'base/progress-circle/ProgressCircle'
 
 const transform = prefixStyle('transform')
 
 export default {
   name: 'Player',
   components: {
-    ProgressBar
+    ProgressBar,
+    ProgressCircle
   },
   data () {
     return {
@@ -453,9 +457,14 @@ export default {
         padding-right 12px
         .control
           width 30px
-          i
-            font-size 25px
-            color $darkThemeColor
+          .icon-playlist, .icon-play-mini, .icon-pause-mini
+            font-size: 30px
+            color: $darkThemeColor
+          .icon-mini
+            position: absolute
+            left: 0
+            top: 0
+            font-size: 32px
   @keyframes rotate
     0%
       transform: rotate(0)
