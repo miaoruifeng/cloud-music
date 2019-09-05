@@ -36,7 +36,7 @@
             <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left" @click="handleChangeMode">
+            <div class="icon i-left" @click="changeMode">
               <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="disableClass">
@@ -256,7 +256,7 @@ export default {
       }
     },
     loop () {
-      this.$$refs.audio.currentTime = 0
+      this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
     },
     formatTime (time) {
@@ -271,18 +271,20 @@ export default {
         this.handleTogglePlay()
       }
     },
-    handleChangeMode () {
+    changeMode () {
       let mode = (this.mode + 1) % 3
       this.setPlayMode(mode)
       let list = null
       if (mode === playMode.random) {
         list = shuffle(this.sequenceList)
+      } else {
+        list = this.sequenceList
       }
       this.resetCurrentIndex(list)
       this.setPlayList(list)
     },
     resetCurrentIndex (list) {
-      let index = list.findIndex((item) => {
+      let index = list.findIndex(item => {
         return item.id === this.currentSong.id
       })
       this.setCurrentIndex(index)
