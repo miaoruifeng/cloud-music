@@ -28,6 +28,13 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="progress-wrapper">
+            <span class="time time-l">{{formatTime(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+            </div>
+            <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
+          </div>
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
@@ -69,7 +76,13 @@
         </div>
       </div>
     </transition>
-    <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error"></audio>
+    <audio
+      :src="currentSong.url"
+      ref="audio"
+      @canplay="ready"
+      @error="error"
+      @timeupdate="updateTime"
+    ></audio>
   </div>
 </template>
 
@@ -77,14 +90,19 @@
 import { mapGetters, mapMutations } from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
+import ProgressBar from 'base/progress-bar/ProgressBar'
 
 const transform = prefixStyle('transform')
 
 export default {
   name: 'Player',
+  components: {
+    ProgressBar
+  },
   data () {
     return {
-      songReady: false
+      songReady: false,
+      currentTime: 0
     }
   },
   computed: {
@@ -99,6 +117,9 @@ export default {
     },
     disableClass () {
       return this.songReady ? '' : 'disable'
+    },
+    percent () {
+      return this.currentTime / this.currentSong.duration
     },
     ...mapGetters([
       'fullScreen',
@@ -208,6 +229,21 @@ export default {
     },
     error () {
       this.songReady = true
+    },
+    updateTime (e) {
+      this.currentTime = e.target.currentTime
+    },
+    formatTime (time) {
+      time = time | 0
+      let minute = time / 60 | 0
+      let second = time % 60
+      return `${minute}:${second < 10 ? '0' + second : second}`
+    },
+    onProgressBarChange (percent) {
+      this.$refs.audio.currentTime = this.currentSong.duration * percent
+      if (!this.playing) {
+        this.handleTogglePlay()
+      }
     },
     // normal - mini之间切换，获取初始位置和大小方法
     _getPosAndScale () {
@@ -331,6 +367,22 @@ export default {
         position: absolute
         bottom: 1.0rem
         width: 100%
+        .progress-wrapper
+          display flex
+          justify-content center
+          align-items center
+          width 80%
+          margin 0 auto
+          padding 10px 0
+          .time
+            width 30px
+            line-height 30px
+            color $textColorL
+            font-size $font-12
+            &.time-r
+              text-align right
+          .progress-bar-wrapper
+            flex 1
         .operators
           display: flex
           align-items: center
