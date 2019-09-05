@@ -36,8 +36,8 @@
             <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="handleChangeMode">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="disableClass">
               <i class="icon-prev" @click="handlePrevClick"></i>
@@ -84,6 +84,7 @@
       @canplay="ready"
       @error="error"
       @timeupdate="updateTime"
+      @ended="end"
     ></audio>
   </div>
 </template>
@@ -94,6 +95,8 @@ import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
 import ProgressBar from 'base/progress-bar/ProgressBar'
 import ProgressCircle from 'base/progress-circle/ProgressCircle'
+import { playMode } from 'common/js/config'
+import { shuffle } from 'common/js/util'
 
 const transform = prefixStyle('transform')
 
@@ -116,6 +119,9 @@ export default {
     iconMini () {
       return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
     },
+    iconMode () {
+      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+    },
     cdClass () {
       return this.playing ? 'play' : 'play pause'
     },
@@ -130,11 +136,16 @@ export default {
       'playList',
       'currentSong',
       'playing',
-      'currentIndex'
+      'currentIndex',
+      'mode',
+      'sequenceList'
     ])
   },
   watch: {
-    currentSong () {
+    currentSong (newSong, oldSong) {
+      if (newSong.id === oldSong.id) {
+        return
+      }
       this.$nextTick(() => {
         this.$refs.audio.play()
       })
@@ -237,6 +248,17 @@ export default {
     updateTime (e) {
       this.currentTime = e.target.currentTime
     },
+    end () {
+      if (this.mode === playMode.loop) {
+        this.loop()
+      } else {
+        this.handleNextClick()
+      }
+    },
+    loop () {
+      this.$$refs.audio.currentTime = 0
+      this.$refs.audio.play()
+    },
     formatTime (time) {
       time = time | 0
       let minute = time / 60 | 0
@@ -248,6 +270,22 @@ export default {
       if (!this.playing) {
         this.handleTogglePlay()
       }
+    },
+    handleChangeMode () {
+      let mode = (this.mode + 1) % 3
+      this.setPlayMode(mode)
+      let list = null
+      if (mode === playMode.random) {
+        list = shuffle(this.sequenceList)
+      }
+      this.resetCurrentIndex(list)
+      this.setPlayList(list)
+    },
+    resetCurrentIndex (list) {
+      let index = list.findIndex((item) => {
+        return item.id === this.currentSong.id
+      })
+      this.setCurrentIndex(index)
     },
     // normal - mini之间切换，获取初始位置和大小方法
     _getPosAndScale () {
@@ -268,7 +306,9 @@ export default {
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       setPlayingState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX'
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setPlayMode: 'SET_PLAY_MODE',
+      setPlayList: 'SET_PLAY_LIST'
     })
   }
 }

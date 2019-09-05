@@ -55,7 +55,7 @@ export default {
     },
     handleProgressClick (e) {
       let rect = this.$refs.progressBar.getBoundingClientRect()
-      let offset = e.pageX - rect.left
+      let offset = e.pageX - rect.left - PROGRESS_BTN_WIDTH / 2
       this._offset(offset)
       this._trigglePercent()
     },
