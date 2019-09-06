@@ -26,8 +26,25 @@
               </div>
             </div>
           </div>
+          <scroll class="middle-r" :data="currentLyric && currentLyric.lines" ref="lyricList">
+            <div class="lyric-wrapper">
+              <div v-if="currentLyric">
+                <p
+                  class="lyric"
+                  :class="{'current': currentLineNum === index}"
+                  v-for="(item, index) of currentLyric.lines"
+                  :key="index"
+                  ref="lyricLine"
+                >{{item.txt}}</p>
+              </div>
+            </div>
+          </scroll>
         </div>
         <div class="bottom">
+          <div class="dot-wrapper">
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
           <div class="progress-wrapper">
             <span class="time time-l">{{formatTime(currentTime)}}</span>
             <div class="progress-bar-wrapper">
@@ -97,6 +114,8 @@ import ProgressBar from 'base/progress-bar/ProgressBar'
 import ProgressCircle from 'base/progress-circle/ProgressCircle'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
+import Lyric from 'lyric-parser'
+import Scroll from 'base/scroll/Scroll'
 
 const transform = prefixStyle('transform')
 
@@ -104,12 +123,15 @@ export default {
   name: 'Player',
   components: {
     ProgressBar,
-    ProgressCircle
+    ProgressCircle,
+    Scroll
   },
   data () {
     return {
       songReady: false,
-      currentTime: 0
+      currentTime: 0,
+      currentLyric: null,
+      currentLineNum: 0
     }
   },
   computed: {
@@ -148,7 +170,7 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.audio.play()
-        this.currentSong.getLyric()
+        this._getLyric()
       })
     },
     playing () {
@@ -290,6 +312,26 @@ export default {
       })
       this.setCurrentIndex(index)
     },
+    // 歌词每一行发生改变时 回调
+    handleLyric ({lineNum, txt}) {
+      this.currentLineNum = lineNum
+      if (lineNum > 5) {
+        let lineEl = this.$refs.lyricLine[lineNum - 5]
+        this.$refs.lyricList.scrollToElement(lineEl, 1000)
+      } else {
+        this.$refs.lyricList.scrollTo(0, 0, 1000)
+      }
+    },
+    // 获取歌词
+    _getLyric () {
+      this.currentSong.getLyric().then(lyric => {
+        this.currentLyric = new Lyric(lyric, this.handleLyric)
+        if (this.playing) {
+          this.currentLyric.play()
+        }
+        console.log(this.currentLyric)
+      })
+    },
     // normal - mini之间切换，获取初始位置和大小方法
     _getPosAndScale () {
       const targetWidth = 40
@@ -410,10 +452,42 @@ export default {
                   animation: rotate 20s linear infinite
                 &.pause
                   animation-play-state: paused
+        .middle-r
+          display: inline-block
+          width: 100%
+          height: 100%
+          vertical-align: top
+          overflow: hidden
+          .lyric-wrapper
+            margin: 0 auto
+            width: 80%
+            text-align: center
+            overflow: hidden
+            .lyric
+              line-height: 32px
+              font-size: $font-14
+              color: $textColorG
+              &.current
+                color: $textColorL
       .bottom
         position: absolute
         bottom: 1.0rem
         width: 100%
+        .dot-wrapper
+          text-align: center
+          font-size: 0
+          .dot
+            display: inline-block
+            vertical-align: middle
+            margin: 0 4px
+            width: 8px
+            height: 8px
+            border-radius: 50%
+            background: $textColorG
+            &.active
+              width: 20px
+              border-radius: 5px
+              color: $textColorGL
         .progress-wrapper
           display flex
           justify-content center
