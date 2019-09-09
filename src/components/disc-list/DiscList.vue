@@ -2,7 +2,7 @@
   <div class="disc-list">
     <h1 class="list-title">热门歌单推荐</h1>
     <ul>
-      <li class="item" v-for="item of list" :key="item.dissid">
+      <li class="item" v-for="item of list" :key="item.dissid" @click="selectItem(item)">
         <img class="item-img" v-lazy="item.imgurl" />
         <div class="item-text">
           <h2 class="item-name">{{item.dissname}}</h2>
@@ -18,6 +18,11 @@ export default {
   name: 'DiscList',
   props: {
     list: Array
+  },
+  methods: {
+    selectItem (item) {
+      this.$emit('select', item)
+    }
   }
 }
 </script>

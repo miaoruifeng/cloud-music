@@ -47,7 +47,7 @@ export function getDiscList () {
 }
 // 获取推荐歌单列表数据接口
 export function getSongList (disstid) {
-  const url = '/api/getCdInfo'
+  const url = '/getCdInfo'
   const data = Object.assign({}, commonParams, {
     disstid,
     type: 1,

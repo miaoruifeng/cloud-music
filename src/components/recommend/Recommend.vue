@@ -9,12 +9,13 @@
             </a>
           </div>
         </slider>
-        <disc-list :list="discList"></disc-list>
+        <disc-list :list="discList" @select="selectDisc"></disc-list>
       </div>
       <div class="loading-container" v-if="showLoading">
         <loading></loading>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -26,6 +27,7 @@ import Slider from 'base/slider/Slider'
 import Loading from 'base/loading/Loading'
 import DiscList from 'components/disc-list/DiscList'
 import { playListMixin } from 'common/js/mixin'
+import { mapMutations } from 'vuex'
 export default {
   name: 'Recommend',
   components: {
@@ -52,6 +54,12 @@ export default {
       this.$refs.recommend.style.bottom = bottom
       this.$refs.scroll.refresh()
     },
+    selectDisc (item) {
+      this.$router.push({
+        path: `/recommend/${item.dissid}`
+      })
+      this.setDisc(item)
+    },
     _getSliderList () {
       getSliderList().then((res) => {
         if (res.code === ERR_OK) {
@@ -71,7 +79,10 @@ export default {
         this.checkloaded = true
         this.$refs.scroll.refresh()
       }
-    }
+    },
+    ...mapMutations({
+      'setDisc': 'SET_DISC'
+    })
   },
   created () {
     this._getSliderList()
