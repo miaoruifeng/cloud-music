@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend" ref="recommend">
     <scroll class="recommend-content" ref="scroll" :data="discList">
       <div>
         <slider v-if="slider.length">
@@ -25,6 +25,7 @@ import Scroll from 'base/scroll/Scroll'
 import Slider from 'base/slider/Slider'
 import Loading from 'base/loading/Loading'
 import DiscList from 'components/disc-list/DiscList'
+import { playListMixin } from 'common/js/mixin'
 export default {
   name: 'Recommend',
   components: {
@@ -33,6 +34,7 @@ export default {
     Scroll,
     Loading
   },
+  mixins: [playListMixin],
   data () {
     return {
       slider: [],
@@ -45,6 +47,11 @@ export default {
     }
   },
   methods: {
+    handlePlayList (playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.recommend.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
     _getSliderList () {
       getSliderList().then((res) => {
         if (res.code === ERR_OK) {

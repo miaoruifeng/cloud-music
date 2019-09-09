@@ -1,6 +1,6 @@
 <template>
-  <div class="singer">
-    <list-view :list="singers" @select="selectSinger"></list-view>
+  <div class="singer" ref="singer">
+    <list-view :list="singers" @select="selectSinger" ref="singerList"></list-view>
     <router-view></router-view>
     <div class="loading-container" v-if="!singers.length">
       <loading></loading>
@@ -15,6 +15,7 @@ import { getSingerList } from 'api/singer'
 import Singer from 'common/js/singer'
 import ListView from 'base/listview/ListView'
 import Loading from 'base/loading/Loading'
+import { playListMixin } from 'common/js/mixin'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
@@ -25,12 +26,18 @@ export default {
     ListView,
     Loading
   },
+  mixins: [playListMixin],
   data () {
     return {
       singers: []
     }
   },
   methods: {
+    handlePlayList (playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.singer.style.bottom = bottom
+      this.$refs.singerList.refresh()
+    },
     _getSingerList () {
       getSingerList().then((res) => {
         if (res.code === ERR_OK) {

@@ -38,6 +38,7 @@ import { prefixStyle } from 'common/js/dom'
 import Scroll from 'base/scroll/Scroll'
 import SongList from 'base/song-list/SongList'
 import Loading from 'base/loading/Loading'
+import { playListMixin } from 'common/js/mixin'
 
 const RESERVED_HEIGHT = 40
 const transform = prefixStyle('transform')
@@ -49,6 +50,7 @@ export default {
     SongList,
     Loading
   },
+  mixins: [playListMixin],
   props: {
     title: {
       type: String,
@@ -74,6 +76,11 @@ export default {
     }
   },
   methods: {
+    handlePlayList (playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
     scroll (pos) {
       this.scrollY = pos.y
     },
