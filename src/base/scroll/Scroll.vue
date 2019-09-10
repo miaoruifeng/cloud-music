@@ -24,6 +24,10 @@ export default {
     listenScroll: {
       type: Boolean,
       default: false
+    },
+    pullup: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -46,6 +50,13 @@ export default {
         let that = this
         this.scroll.on('scroll', (pos) => {
           that.$emit('scroll', pos)
+        })
+      }
+      if (this.pullup) {
+        this.scroll.on('scrollEnd', () => {
+          if (this.scroll.y <= this.scroll.maxScrollY + 50) {
+            this.$emit('scrollEnd')
+          }
         })
       }
     },

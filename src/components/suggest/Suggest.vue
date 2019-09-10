@@ -1,0 +1,148 @@
+<template>
+  <scroll class="suggest" :data="result" :pullup="pullup" ref="suggest" @scrollEnd="searchMore">
+    <ul class="suggest-list">
+      <li class="item" v-for="(item, index) of result" :key="index">
+        <div class="icon">
+          <i :class="getIconClass(item)"></i>
+        </div>
+        <div class="name">
+          <p class="text" v-html="getDisplayName(item)"></p>
+        </div>
+      </li>
+      <loading v-show="hasMore" title="正在加载..."></loading>
+    </ul>
+  </scroll>
+</template>
+
+<script>
+import { search } from 'api/search'
+import { ERR_OK } from 'api/config'
+import { createSong, isValidMusic, processSongsUrl } from 'common/js/song.js'
+import Scroll from 'base/scroll/Scroll'
+import Loading from 'base/loading/Loading'
+
+const PER_PAGE = 20
+const TYPE_SINGER = 'singer'
+
+export default {
+  name: 'Suggest',
+  components: {
+    Scroll,
+    Loading
+  },
+  props: {
+    query: {
+      type: String,
+      default: ''
+    },
+    showSinger: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data () {
+    return {
+      page: 1,
+      result: [],
+      pullup: true,
+      hasMore: true
+    }
+  },
+  watch: {
+    query () {
+      this._search()
+    }
+  },
+  methods: {
+    getIconClass (item) {
+      return item.type === TYPE_SINGER ? 'icon-mine' : 'icon-music'
+    },
+    getDisplayName (item) {
+      if (item.type === TYPE_SINGER) {
+        return item.singername
+      } else {
+        return `${item.name}-${item.singer}`
+      }
+    },
+    searchMore () {
+      if (!this.hasMore) {
+        return
+      }
+      this.page++
+      search(this.query, this.page, this.showSinger, PER_PAGE).then(res => {
+        if (res.code === ERR_OK) {
+          this._genResult(res.data).then(result => {
+            this.result = this.result.concat(result)
+          })
+          this._checkMore(res.data)
+        }
+      })
+    },
+    _search () {
+      this.page = 1
+      this.hasMore = true
+      this.$refs.suggest.scrollTo(0, 0)
+      search(this.query, this.page, this.showSinger, PER_PAGE).then(res => {
+        if (res.code === ERR_OK) {
+          this._genResult(res.data).then(result => {
+            this.result = result
+          })
+          this._checkMore(res.data)
+        }
+      })
+    },
+    _checkMore (data) {
+      const song = data.song
+      if (song.length || (song.curnum + song.curpage * PER_PAGE) >= song.totalnum) {
+        this.hasMore = false
+      }
+    },
+    _genResult (list) {
+      let ret = []
+      if (list.zhida && list.zhida.singerid && this.page === 1) {
+        ret.push({...list.zhida, ...{type: TYPE_SINGER}})
+      }
+      return processSongsUrl(this._normalizeSongs(list.song.list)).then(songs => {
+        ret = ret.concat(songs)
+        return ret
+      })
+    },
+    _normalizeSongs (list) {
+      let ret = []
+      list.forEach(musicData => {
+        if (isValidMusic(musicData)) {
+          ret.push(createSong(musicData))
+        }
+      })
+      return ret
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+  @import '~stylus/variable.styl'
+  @import '~stylus/mixin.styl'
+  .suggest
+    height: 100%
+    overflow: hidden
+    .suggest-list
+      padding: 0 30px
+      .item
+        display: flex
+        align-items: center
+        padding-bottom: 20px
+      .icon
+        flex: 0 0 30px
+        width: 30px
+        [class^='icon']
+          font-size: $font-14
+          color: $textColorD
+      .name
+        overflow hidden
+        flex: 1
+        font-size: $font-14
+        color: $textColorD
+        .text
+          ellipsis()
+</style>

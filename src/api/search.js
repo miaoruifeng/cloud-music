@@ -14,7 +14,7 @@ export function getHotKey () {
 }
 // 搜索接口
 export function search (query, page, zhida, perpage) {
-  const url = '/api/search'
+  const url = '/search'
   const data = Object.assign({}, commonParams, {
     w: query,
     p: page,
