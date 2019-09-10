@@ -209,7 +209,7 @@ export default {
     .item-group-title
       padding-left 12px
       line-height 26px
-      background-color $bghighLighttColor
+      background-color $bgHLColor
       font-size $font-12
       color $textColorG
     .group-item
@@ -254,7 +254,7 @@ export default {
       .fixed-title
         padding-left 12px
         line-height 26px
-        background-color $bghighLighttColor
+        background-color $bgHLColor
         font-size $font-12
         color $textColorG
     .loading-container

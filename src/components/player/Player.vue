@@ -639,7 +639,7 @@ export default {
       align-items center
       width 100%
       height 60px
-      background-color $bghighLighttColor
+      background-color $bgHLColor
       &.mini-enter-active, &.mini-leave-active
         transition all 0.4s
       &.mini-enter, &.mini-leave-to

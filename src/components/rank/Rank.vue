@@ -85,11 +85,11 @@ export default {
       .item
         display: flex
         align-items: center
-        margin: 0 20px
-        padding-top: 20px
+        margin: 0 .40rem
+        padding-top: .40rem
         height: 100px
         &:last-child
-          padding-bottom: 20px
+          padding-bottom: .40rem
         .img-wrapper
           flex: 0 0 100px
           width: 100px
@@ -100,10 +100,10 @@ export default {
           flex-direction: column
           justify-content: center
           overflow: hidden
-          padding: 0 16px
+          padding: 0 .32rem
           height: 100px
           color: $textColorG
-          background: $bghighLighttColor
+          background: $bgHLColor
           font-size: $font-12
           .song
             ellipsis()
