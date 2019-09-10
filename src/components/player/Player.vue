@@ -645,6 +645,7 @@ export default {
       &.mini-enter, &.mini-leave-to
         opacity 0
       .mini-l
+        overflow hidden
         flex 1
         display flex
         padding-left 12px

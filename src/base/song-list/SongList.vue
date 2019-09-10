@@ -7,6 +7,9 @@
         :key="index"
         @click="selectItem(song, index)"
       >
+        <div class="rank" v-if="rank">
+          <span :class="getRankClass(index)">{{getRankText(index)}}</span>
+        </div>
         <div class="item-content">
           <h2 class="item-name">{{song.name}}</h2>
           <p class="item-desc">{{getDesc(song)}}</p>
@@ -23,6 +26,10 @@ export default {
     songs: {
       type: Array,
       default: null
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -31,6 +38,18 @@ export default {
     },
     selectItem (item, index) {
       this.$emit('select', item, index)
+    },
+    getRankClass (index) {
+      if (index <= 2) {
+        return `icon icon${index + 1}`
+      } else {
+        return 'text'
+      }
+    },
+    getRankText (index) {
+      if (index > 2) {
+        return index + 1
+      }
     }
   }
 }
@@ -49,6 +68,25 @@ export default {
       align-items center
       box-sizing border-box
       padding .20rem .40rem
+      .rank
+        flex: 0 0 25px
+        width: 25px
+        margin-right: 20px
+        text-align: center
+        .icon
+          display: inline-block
+          width: 25px
+          height: 25px
+          background-size: 25px 24px
+          &.icon1
+            bg-image('first')
+          &.icon2
+            bg-image('second')
+          &.icon3
+            bg-image('third')
+        .text
+          color: $themeColor
+          font-size: $font-18
       .item-content
         overflow hidden
         flex 1
