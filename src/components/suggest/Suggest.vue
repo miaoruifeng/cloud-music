@@ -1,7 +1,15 @@
 <template>
-  <scroll class="suggest" :data="result" :pullup="pullup" ref="suggest" @scrollEnd="searchMore">
+  <scroll
+    class="suggest"
+    :data="result"
+    :pullup="pullup"
+    :beforeScroll="beforeScroll"
+    ref="suggest"
+    @scrollEnd="searchMore"
+    @beforeScroll="listScroll"
+  >
     <ul class="suggest-list">
-      <li class="item" v-for="(item, index) of result" :key="index">
+      <li class="item" v-for="(item, index) of result" :key="index" @click="selectItem(item)">
         <div class="icon">
           <i :class="getIconClass(item)"></i>
         </div>
@@ -11,6 +19,9 @@
       </li>
       <loading v-show="hasMore" title="正在加载..."></loading>
     </ul>
+    <div class="no-result-wrapper" v-show="!hasMore && !result.length">
+      <no-result text="抱歉，暂无搜索结果"></no-result>
+    </div>
   </scroll>
 </template>
 
@@ -20,6 +31,9 @@ import { ERR_OK } from 'api/config'
 import { createSong, isValidMusic, processSongsUrl } from 'common/js/song.js'
 import Scroll from 'base/scroll/Scroll'
 import Loading from 'base/loading/Loading'
+import Singer from 'common/js/singer'
+import { mapMutations, mapActions } from 'vuex'
+import NoResult from 'base/no-result/NoResult'
 
 const PER_PAGE = 20
 const TYPE_SINGER = 'singer'
@@ -28,7 +42,8 @@ export default {
   name: 'Suggest',
   components: {
     Scroll,
-    Loading
+    Loading,
+    NoResult
   },
   props: {
     query: {
@@ -45,6 +60,7 @@ export default {
       page: 1,
       result: [],
       pullup: true,
+      beforeScroll: true,
       hasMore: true
     }
   },
@@ -78,6 +94,23 @@ export default {
         }
       })
     },
+    selectItem (item) {
+      if (item.type === TYPE_SINGER) {
+        const singer = new Singer({
+          id: item.singermid,
+          name: item.singername
+        })
+        this.$router.push({
+          path: `/search/${singer.id}`
+        })
+        this.setSinger(singer)
+      } else {
+        this.insertSong(item)
+      }
+    },
+    listScroll () {
+      this.$emit('listScroll')
+    },
     _search () {
       this.page = 1
       this.hasMore = true
@@ -93,7 +126,7 @@ export default {
     },
     _checkMore (data) {
       const song = data.song
-      if (song.length || (song.curnum + song.curpage * PER_PAGE) >= song.totalnum) {
+      if (!song.list.length || (song.curnum + song.curpage * PER_PAGE) >= song.totalnum) {
         this.hasMore = false
       }
     },
@@ -115,7 +148,13 @@ export default {
         }
       })
       return ret
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    }),
+    ...mapActions([
+      'insertSong'
+    ])
   }
 }
 </script>
@@ -145,4 +184,9 @@ export default {
         color: $textColorD
         .text
           ellipsis()
+    .no-result-wrapper
+      position absolute
+      left 50%
+      top 40%
+      transform translate(-50%, -50%)
 </style>
