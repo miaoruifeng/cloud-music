@@ -107,6 +107,10 @@ export default {
       } else {
         this.insertSong(item)
       }
+      this.$emit('select')
+    },
+    refresh () {
+      this.$refs.suggest.refresh()
     },
     listScroll () {
       this.$emit('listScroll')
