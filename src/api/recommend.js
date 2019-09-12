@@ -1,14 +1,4 @@
-// import axios from './axios.js'
-
-// export function getSliderList () {
-//   return axios.get('/banner')
-// }
-
-// export function getHotSongList () {
-//   return axios.get('/top/playlist')
-// }
-
-import axios from './axios.js'
+import axios from 'axios'
 import jsonp from 'common/js/jsonp'
 import { commonParams, options } from 'api/config.js'
 
@@ -25,7 +15,7 @@ export function getSliderList () {
 
 // 获取推荐歌单数据接口
 export function getDiscList () {
-  let url = '/getDiscList'
+  let url = '/api/getDiscList'
   let params = Object.assign({}, commonParams, {
     picmid: 1,
     rnd: Math.random(),
@@ -47,7 +37,7 @@ export function getDiscList () {
 }
 // 获取推荐歌单列表数据接口
 export function getSongList (disstid) {
-  const url = '/getCdInfo'
+  const url = '/api/getCdInfo'
   const data = Object.assign({}, commonParams, {
     disstid,
     type: 1,

@@ -3,7 +3,7 @@ import { getUid } from 'common/js/uid'
 import axios from 'axios'
 
 export function getLyric (mid) {
-  const url = '/lyric'
+  const url = '/api/lyric'
   const data = Object.assign({}, commonParams, {
     songmid: mid,
     platform: 'yqq',
@@ -21,7 +21,7 @@ export function getLyric (mid) {
 }
 
 export function getSongsUrl (songs) {
-  const url = '/getPurlUrl'
+  const url = '/api/getPurlUrl'
   let mids = []
   let types = []
   songs.forEach((song) => {
