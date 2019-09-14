@@ -6,7 +6,7 @@
           <h1 class="title">
             <i class="icon" :class="iconMode" @click="changeMode"></i>
             <span class="text">{{modeText}}</span>
-            <span class="add">
+            <span class="add" @click="addSong">
               <i class="icon-add"></i>
               添加歌曲到队列
             </span>
@@ -39,7 +39,8 @@
           <span>关闭</span>
         </div>
       </div>
-      <confirm text="是否情况播放列表" confirmButtonText="清空" ref="confirm" @confirm="clearSongList"></confirm>
+      <confirm text="是否清空播放列表" confirmButtonText="清空" ref="confirm" @confirm="clearSongList"></confirm>
+      <add-song ref="addSong"></add-song>
     </div>
   </transition>
 </template>
@@ -50,11 +51,13 @@ import { playMode } from 'common/js/config'
 import Scroll from 'base/scroll/Scroll'
 import Confirm from 'base/confirm/Confirm'
 import { playerMixin } from 'common/js/mixin'
+import AddSong from 'components/add-song/AddSong'
 export default {
   name: 'PlayList',
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    AddSong
   },
   mixins: [playerMixin],
   data () {
@@ -111,6 +114,9 @@ export default {
     clearSongList () {
       this.clearSongList()
       this.hide()
+    },
+    addSong () {
+      this.$refs.addSong.show()
     },
     ...mapActions([
       'deleteSong',
