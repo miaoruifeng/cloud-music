@@ -107,7 +107,7 @@
     <audio
       :src="currentSong.url"
       ref="audio"
-      @canplay="ready"
+      @play="ready"
       @error="error"
       @timeupdate="updateTime"
       @ended="end"
@@ -238,6 +238,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === this.playList.length) {
@@ -256,6 +257,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex - 1
         if (index === 0) {
@@ -288,6 +290,7 @@ export default {
     loop () {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
+      this.setPlayingState(true)
       if (this.currentLyric) {
         this.currentLyric.seek(0)
       }
@@ -430,7 +433,8 @@ export default {
       //   this.$refs.audio.play()
       //   this._getLyric()
       // })
-      setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$refs.audio.play()
         this._getLyric()
       }, 1000)
