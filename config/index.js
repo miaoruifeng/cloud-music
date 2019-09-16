@@ -12,8 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       // '/api': {
-      //   // target: 'https://v1.itooi.cn/netease/',
-      //   target: 'http://47.105.150.105:4001/',
+      //   target: 'http://localhost',
       //   changeOrigin: true,
       //   ws: true,
       //   pathRewrite: {
