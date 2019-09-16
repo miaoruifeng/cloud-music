@@ -134,7 +134,7 @@ export default {
       text-align: center
       .title
         line-height: 44px
-        font-size: $font-18
+        font-size: $font-16
         color: $textColorL
       .close
         position: absolute
@@ -143,7 +143,7 @@ export default {
         .icon-close
           display: block
           padding: 12px
-          font-size: 20px
+          font-size: $font-16
           color: $themeColor
     .search-box-wrapper
       margin: 20px
@@ -157,7 +157,7 @@ export default {
           height: 100%
           overflow: hidden
           .list-inner
-            padding: 20px 30px
+            padding: 15px 25px
     .search-result
       position: fixed
       top: 124px

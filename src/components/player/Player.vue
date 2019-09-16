@@ -74,7 +74,7 @@
               <i class="icon-next" @click="handleNextClick"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon icon-not-favorite"></i>
+              <i class="icon" :class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -612,6 +612,8 @@ export default {
           .icon
             i
               font-size 30px
+              &.icon-favorite
+                color $themeColorSub
       &.normal-enter-active, &.normal-leave-active
         transition all 0.4s
         .top, .bottom
