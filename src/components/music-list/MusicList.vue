@@ -230,6 +230,8 @@ export default {
       bottom: 0
       width: 100%
       background-color: $bgColor
+      .song-list-wrapper
+        padding 15px 25px
       .loading-container
         position: absolute
         width: 100%

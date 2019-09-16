@@ -2,7 +2,7 @@
   <div class="song-list">
     <ul>
       <li
-        class="item border-bottom"
+        class="item"
         v-for="(song, index) of songs"
         :key="index"
         @click="selectItem(song, index)"
@@ -58,16 +58,13 @@ export default {
 <style lang="stylus" scoped>
   @import '~stylus/variable.styl'
   @import '~stylus/mixin.styl'
-  .border-bottom
-    &:before
-      border-color $bgDialogColor
   .song-list
     .item
       overflow hidden
       display flex
       align-items center
       box-sizing border-box
-      padding .20rem .40rem
+      padding .20rem 0
       .rank
         flex: 0 0 25px
         width: 25px
